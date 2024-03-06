@@ -7,15 +7,25 @@ def setup_database():
     cur.execute("CREATE TABLE IF NOT EXISTS users(id INT PRIMARY KEY, username TEXT NOT NULL)")
 
     cur.execute("""CREATE TABLE IF NOT EXISTS free_recall(
-        id INT PRIMARY KEY, 
+        id INTEGER PRIMARY KEY, 
         user_id INT, 
         prompt TEXT NOT NULL, 
-        source TEXT NOT NULL, 
+        source_information TEXT NOT NULL, 
         tag TEXT, 
         creation_date DATETIME NOT NULL, 
-        days_till_next_recall INTEGER NOT NULL, 
         next_recall_date DATETIME NOT NULL,
         FOREIGN KEY(user_id) REFERENCES users(id))""")
+
+    cur.execute("""CREATE TABLE IF NOT EXISTS reflection(
+        reflection_id INTEGER PRIMARY KEY,
+        recall_id INT,
+        reflection_text TEXT NOT NULL,
+        accuracy INT CHECK (accuracy >= 1 AND accuracy <= 5),
+        confidence INT CHECK (confidence >= 1 AND confidence <= 5),
+        automaticity INT CHECK (automaticity >= 1 AND automaticity <= 5),
+        previous_reflection INT,
+        FOREIGN KEY(recall_id) REFERENCES free_recall(id),
+        FOREIGN KEY(previous_reflection) REFERENCES reflection(reflection_id))""")
 
     con.commit()
     con.close()

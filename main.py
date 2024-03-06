@@ -14,6 +14,7 @@ bot = discord.Bot()
 
 profiles = bot.create_group("profile", "Create/Read/Update/Delete commands for user profile/s")
 
+
 @bot.event
 async def on_ready():
     print(f'We have logged in as {bot.user}')
